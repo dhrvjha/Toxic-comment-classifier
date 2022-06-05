@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Toxic Comment</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="nav">
+            <h3>Toxic Comment Classifier</h3>
+        </div>
+
+        <div class="flex-container flex-center">
+
+            <div class="flex-container">
+                <textarea name="name" rows="6" cols="50"></textarea>
+                <button class="btn btn-primary ml-auto" onclick="getResult()" name="button">Evaluate</button>
+            </div>
+            <div class="container result">
+                <span class="block" id="toxic">Toxic</span>
+                <span class="block" id="severe_toxic">Severe Toxic</span>
+                <span class="block" id="obscene">Obscene</span>
+                <span class="block" id="identity_hate">Identity Hate</span>
+                <span class="block" id="insult">Insult</span>
+                <span class="block" id="threat">Threat</span>
+            </div>
+        </div>
+        <script>
+            if ( window.history.replaceState ) {
+              window.history.replaceState( null, null, window.location.href );
+            }
+
+            function clearResult(){
+                for (const item of document.getElementsByClassName("block"))
+                    item.style.display = "None"
+            }
+            function getResult() {
+                clearResult()
+                fetch("http://127.0.0.1:8000/", {
+                    method: 'POST',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        for (const v of data.flags){
+                            document.getElementById(v).style.display = "block"
+                        }
+                    })
+            }
+        </script>
+    </body>
+</html>
